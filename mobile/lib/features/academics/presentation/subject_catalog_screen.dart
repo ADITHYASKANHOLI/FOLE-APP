@@ -10,6 +10,7 @@ import '../../../core/widgets/error_view.dart';
 import '../../../core/widgets/empty_view.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../data/academics_repository.dart';
+import '../domain/academic_models.dart';
 
 class SubjectCatalogScreen extends ConsumerStatefulWidget {
   final String? initialDept;
@@ -48,12 +49,12 @@ class _SubjectCatalogScreenState extends ConsumerState<SubjectCatalogScreen> {
   @override
   Widget build(BuildContext context) {
     final deptsAsync = ref.watch(departmentsProvider);
-    final filters = {
-      'dept': _selectedDept,
-      'sem': _selectedSem,
-      'q': _searchQuery,
-    };
-    final subjectsAsync = ref.watch(subjectsFilterProvider(filters));
+    final filter = SubjectFilter(
+      departmentSlug: _selectedDept,
+      semester: _selectedSem,
+      search: _searchQuery.isNotEmpty ? _searchQuery : null,
+    );
+    final subjectsAsync = ref.watch(subjectsFilterProvider(filter));
 
     return Scaffold(
       appBar: const EngivaultAppBar(title: 'KTU Subjects'),
@@ -221,7 +222,7 @@ class _SubjectCatalogScreenState extends ConsumerState<SubjectCatalogScreen> {
                   const LoadingView(message: 'Loading subjects catalog...'),
               error: (err, _) => ErrorView(
                 message: err.toString(),
-                onRetry: () => ref.refresh(subjectsFilterProvider(filters)),
+                onRetry: () => ref.invalidate(subjectsFilterProvider(filter)),
               ),
             ),
           ),

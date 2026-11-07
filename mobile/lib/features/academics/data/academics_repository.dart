@@ -18,12 +18,12 @@ final semestersProvider = FutureProvider<List<Semester>>((ref) async {
 });
 
 final subjectsFilterProvider =
-    FutureProvider.family<List<SubjectSummary>, Map<String, dynamic>>(
-        (ref, filters) async {
+    FutureProvider.family<List<SubjectSummary>, SubjectFilter>(
+        (ref, filter) async {
   return await ref.watch(academicsRepositoryProvider).getSubjects(
-        departmentSlug: filters['dept']?.toString(),
-        semester: filters['sem'] as int?,
-        search: filters['q']?.toString(),
+        departmentSlug: filter.departmentSlug,
+        semester: filter.semester,
+        search: filter.search,
       );
 });
 

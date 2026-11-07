@@ -72,3 +72,28 @@ class DownloadAuthResponse {
     );
   }
 }
+
+class MaterialFilter {
+  final String? subjectId;
+  final String? moduleId;
+  final String? search;
+
+  const MaterialFilter({
+    this.subjectId,
+    this.moduleId,
+    this.search,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MaterialFilter &&
+          runtimeType == other.runtimeType &&
+          subjectId == other.subjectId &&
+          moduleId == other.moduleId &&
+          search == other.search;
+
+  @override
+  int get hashCode =>
+      subjectId.hashCode ^ moduleId.hashCode ^ search.hashCode;
+}

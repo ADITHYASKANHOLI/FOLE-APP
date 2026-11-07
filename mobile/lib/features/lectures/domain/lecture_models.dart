@@ -164,3 +164,34 @@ class LectureListItem {
     );
   }
 }
+
+class LectureFilter {
+  final String? departmentSlug;
+  final String? semester;
+  final String? subject;
+  final String? search;
+
+  const LectureFilter({
+    this.departmentSlug,
+    this.semester,
+    this.subject,
+    this.search,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LectureFilter &&
+          runtimeType == other.runtimeType &&
+          departmentSlug == other.departmentSlug &&
+          semester == other.semester &&
+          subject == other.subject &&
+          search == other.search;
+
+  @override
+  int get hashCode =>
+      departmentSlug.hashCode ^
+      semester.hashCode ^
+      subject.hashCode ^
+      search.hashCode;
+}

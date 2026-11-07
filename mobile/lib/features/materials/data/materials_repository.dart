@@ -9,12 +9,12 @@ final materialsRepositoryProvider = Provider<MaterialsRepository>((ref) {
 });
 
 final materialsListProvider =
-    FutureProvider.family<List<MaterialItem>, Map<String, dynamic>>(
-        (ref, filters) async {
+    FutureProvider.family<List<MaterialItem>, MaterialFilter>(
+        (ref, filter) async {
   return await ref.watch(materialsRepositoryProvider).getMaterials(
-        subjectId: filters['subject_id']?.toString(),
-        moduleId: filters['module_id']?.toString(),
-        search: filters['search']?.toString(),
+        subjectId: filter.subjectId,
+        moduleId: filter.moduleId,
+        search: filter.search,
       );
 });
 

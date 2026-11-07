@@ -36,11 +36,11 @@ class _MaterialsCatalogScreenState
 
   @override
   Widget build(BuildContext context) {
-    final filters = {
-      'subject_id': widget.initialSubjectId,
-      'search': _searchQuery,
-    };
-    final materialsAsync = ref.watch(materialsListProvider(filters));
+    final filter = MaterialFilter(
+      subjectId: widget.initialSubjectId,
+      search: _searchQuery.isNotEmpty ? _searchQuery : null,
+    );
+    final materialsAsync = ref.watch(materialsListProvider(filter));
 
     return Scaffold(
       appBar: const EngivaultAppBar(title: 'Study Materials'),
@@ -156,7 +156,7 @@ class _MaterialsCatalogScreenState
                   message: 'Loading study materials catalogue...'),
               error: (err, _) => ErrorView(
                 message: err.toString(),
-                onRetry: () => ref.refresh(materialsListProvider(filters)),
+                onRetry: () => ref.invalidate(materialsListProvider(filter)),
               ),
             ),
           ),

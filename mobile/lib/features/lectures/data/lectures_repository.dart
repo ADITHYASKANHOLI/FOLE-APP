@@ -14,13 +14,13 @@ final lessonDetailProvider =
 });
 
 final lecturesBrowserProvider =
-    FutureProvider.family<List<LectureListItem>, Map<String, dynamic>>(
-        (ref, filters) async {
+    FutureProvider.family<List<LectureListItem>, LectureFilter>(
+        (ref, filter) async {
   return await ref.watch(lecturesRepositoryProvider).getLectures(
-        dept: filters['dept']?.toString(),
-        sem: filters['sem']?.toString(),
-        subject: filters['subject']?.toString(),
-        q: filters['q']?.toString(),
+        dept: filter.departmentSlug,
+        sem: filter.semester,
+        subject: filter.subject,
+        q: filter.search,
       );
 });
 

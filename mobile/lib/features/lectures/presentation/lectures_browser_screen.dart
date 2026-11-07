@@ -12,6 +12,7 @@ import '../../../core/widgets/empty_view.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../academics/data/academics_repository.dart';
 import '../data/lectures_repository.dart';
+import '../domain/lecture_models.dart';
 
 class LecturesBrowserScreen extends ConsumerStatefulWidget {
   final String? initialDept;
@@ -54,13 +55,13 @@ class _LecturesBrowserScreenState extends ConsumerState<LecturesBrowserScreen> {
   @override
   Widget build(BuildContext context) {
     final deptsAsync = ref.watch(departmentsProvider);
-    final filters = {
-      'dept': _selectedDept,
-      'sem': _selectedSem,
-      'subject': _selectedSubject,
-      'q': _searchQuery,
-    };
-    final lecturesAsync = ref.watch(lecturesBrowserProvider(filters));
+    final filter = LectureFilter(
+      departmentSlug: _selectedDept,
+      semester: _selectedSem,
+      subject: _selectedSubject,
+      search: _searchQuery.isNotEmpty ? _searchQuery : null,
+    );
+    final lecturesAsync = ref.watch(lecturesBrowserProvider(filter));
 
     return Scaffold(
       appBar: const EngivaultAppBar(title: 'Recorded Lectures'),
@@ -221,7 +222,7 @@ class _LecturesBrowserScreenState extends ConsumerState<LecturesBrowserScreen> {
               loading: () => const LoadingView(message: 'Loading lectures...'),
               error: (err, _) => ErrorView(
                 message: err.toString(),
-                onRetry: () => ref.refresh(lecturesBrowserProvider(filters)),
+                onRetry: () => ref.invalidate(lecturesBrowserProvider(filter)),
               ),
             ),
           ),

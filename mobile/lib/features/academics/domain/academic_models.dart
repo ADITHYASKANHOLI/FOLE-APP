@@ -191,3 +191,28 @@ class SubjectDetail {
     );
   }
 }
+
+class SubjectFilter {
+  final String? departmentSlug;
+  final int? semester;
+  final String? search;
+
+  const SubjectFilter({
+    this.departmentSlug,
+    this.semester,
+    this.search,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SubjectFilter &&
+          runtimeType == other.runtimeType &&
+          departmentSlug == other.departmentSlug &&
+          semester == other.semester &&
+          search == other.search;
+
+  @override
+  int get hashCode =>
+      departmentSlug.hashCode ^ semester.hashCode ^ search.hashCode;
+}
