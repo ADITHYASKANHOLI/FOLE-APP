@@ -1,0 +1,120 @@
+import { revalidatePath } from "next/cache";
+
+/**
+ * Centralized Cache Invalidation Helper for ENGIVAULT.
+ * Ensures targeted invalidation across both public and admin routes
+ * when content is created, updated, reordered, or deleted in Supabase.
+ */
+
+export function revalidateAdminContent() {
+  try {
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/dashboard/subjects");
+    revalidatePath("/admin/dashboard/modules");
+    revalidatePath("/admin/dashboard/lessons");
+    revalidatePath("/admin/dashboard/videos");
+    revalidatePath("/admin/dashboard/materials");
+    revalidatePath("/admin/dashboard/uploads");
+  } catch (err) {
+    console.warn("revalidateAdminContent failed:", err);
+  }
+}
+
+export function revalidateSubject(subjectSlug?: string) {
+  try {
+    revalidatePath("/");
+    revalidatePath("/subjects");
+    if (subjectSlug) {
+      revalidatePath(`/subjects/${subjectSlug}`);
+      revalidatePath(`/subjects/${subjectSlug}`, "layout");
+    }
+    revalidatePath("/admin/dashboard/subjects");
+    revalidatePath("/admin/dashboard");
+  } catch (err) {
+    console.warn("revalidateSubject failed:", err);
+  }
+}
+
+export function revalidateModule(subjectSlug?: string, moduleSlug?: string) {
+  try {
+    revalidateSubject(subjectSlug);
+    if (subjectSlug && moduleSlug) {
+      revalidatePath(`/subjects/${subjectSlug}/${moduleSlug}`);
+      revalidatePath(`/subjects/${subjectSlug}/${moduleSlug}`, "layout");
+    }
+    revalidatePath("/admin/dashboard/modules");
+  } catch (err) {
+    console.warn("revalidateModule failed:", err);
+  }
+}
+
+export function revalidateLesson(subjectSlug?: string, moduleSlug?: string, lessonSlug?: string) {
+  try {
+    revalidateModule(subjectSlug, moduleSlug);
+    if (subjectSlug && moduleSlug && lessonSlug) {
+      revalidatePath(`/subjects/${subjectSlug}/${moduleSlug}/${lessonSlug}`);
+    }
+    revalidatePath("/lectures");
+    revalidatePath("/admin/dashboard/lessons");
+    revalidatePath("/admin/dashboard/videos");
+    revalidatePath("/admin/dashboard/materials");
+  } catch (err) {
+    console.warn("revalidateLesson failed:", err);
+  }
+}
+
+export function revalidateContentHierarchy(params: {
+  subjectSlug?: string;
+  moduleSlug?: string;
+  lessonSlug?: string;
+}) {
+  try {
+    revalidatePath("/");
+    revalidatePath("/subjects");
+    revalidatePath("/lectures");
+    if (params.subjectSlug) {
+      revalidatePath(`/subjects/${params.subjectSlug}`);
+      if (params.moduleSlug) {
+        revalidatePath(`/subjects/${params.subjectSlug}/${params.moduleSlug}`);
+        if (params.lessonSlug) {
+          revalidatePath(`/subjects/${params.subjectSlug}/${params.moduleSlug}/${params.lessonSlug}`);
+        }
+      }
+    }
+    revalidateAdminContent();
+  } catch (err) {
+    console.warn("revalidateContentHierarchy failed:", err);
+  }
+}
+
+export function revalidateWorksActivity(slug?: string) {
+  try {
+    revalidatePath("/fole-works");
+    if (slug) {
+      revalidatePath(`/fole-works/${slug}`);
+      revalidatePath(`/api/works/${slug}/flyer`);
+      revalidatePath(`/api/fole-works/${slug}/flyer`);
+    }
+    revalidatePath("/admin/dashboard/works");
+    revalidatePath("/admin/dashboard/works/activities");
+  } catch (err) {
+    console.warn("revalidateWorksActivity failed:", err);
+  }
+}
+
+export function revalidateSpaceEvent(slug?: string) {
+  try {
+    revalidatePath("/fole-space");
+    revalidatePath("/fole-space/calendar");
+    revalidatePath("/fole-space/events");
+    revalidatePath("/fole-space/my");
+    revalidatePath("/fole-space/organizer");
+    if (slug) {
+      revalidatePath(`/fole-space/events/${slug}`);
+      revalidatePath(`/api/space/events/${slug}/flyer`);
+    }
+  } catch (err) {
+    console.warn("revalidateSpaceEvent failed:", err);
+  }
+}
+
