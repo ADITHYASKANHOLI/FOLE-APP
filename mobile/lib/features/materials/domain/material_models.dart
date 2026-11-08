@@ -94,6 +94,5 @@ class MaterialFilter {
           search == other.search;
 
   @override
-  int get hashCode =>
-      subjectId.hashCode ^ moduleId.hashCode ^ search.hashCode;
+  int get hashCode => subjectId.hashCode ^ moduleId.hashCode ^ search.hashCode;
 }
