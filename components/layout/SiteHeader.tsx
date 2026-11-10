@@ -113,6 +113,7 @@ export function SiteHeader({ initialAuth, isOffline = false }: SiteHeaderProps) 
   const navLinks = [
     { label: "Home", href: "/", id: "nav-home" },
     { label: "Learn", href: "/lectures", id: "nav-learn" },
+    { label: "EG Studio", href: "/engineering-graphics", id: "nav-eg-studio" },
     { label: "Materials", href: "/materials", id: "nav-materials" },
     { label: "FOLE SPACE", href: "/fole-space", id: "nav-fole-space" },
     { label: "FOLE WORKS", href: "/fole-works", id: "nav-fole-works" },
@@ -123,6 +124,9 @@ export function SiteHeader({ initialAuth, isOffline = false }: SiteHeaderProps) 
   // Dynamic route awareness: Match most specific routes first
   const getActiveHref = (path: string): string => {
     if (!path || path === "/") return "/";
+    if (path === "/engineering-graphics" || path.startsWith("/engineering-graphics/")) {
+      return "/engineering-graphics";
+    }
     if (path === "/fole-space/events" || path.startsWith("/fole-space/events/")) {
       return "/fole-space/events";
     }
